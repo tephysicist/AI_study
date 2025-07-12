@@ -10,7 +10,7 @@ class FuncDataset(data.Dataset): # имя класса MyDataset может бы
         self.length = len(self.coord_x)
  
 	def __getitem__(self, item): # возвращение образа выборки по индексу item
-    	return self.coord_x[item], self.coord_y[item]
+		return self.coord_x[item], self.coord_y[item]
  
 	def __len__(self): # возвращение размера выборки
     	return self.length
