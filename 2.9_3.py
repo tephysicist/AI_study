@@ -9,7 +9,7 @@ class FuncDataset(data.Dataset):
         _range = torch.arange(-3, 3, 0.1)
         self.data = torch.tensor([(_x, _y) for _x in _range for _y in _range])
         self.target = self._func(self.data)
-        self.length = len(_range) # размер обучающей выборки
+        self.length = len(self.data) # размер обучающей выборки
 
 
     @staticmethod
