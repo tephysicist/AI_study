@@ -7,10 +7,7 @@ class DigitDataset(data.Dataset):
     def __init__(self):
         self.data = _global_var_data_x  # тензор размерностью (178, 13), тип float32
         self.target = _global_var_target  # тензор размерностью (178, ), тип int64 (long)
-
-
         self.length = self.data.size(0) # размер выборки len(self.data)
-        self.categories = ['class_0', 'class_1', 'class_2'] # названия классов
 
 
     def __getitem__(self, item):
@@ -35,3 +32,32 @@ class DigitClassModel(nn.Module):
         x2 = torch.relu(self.layer2(x1)) # через второй слой
         x3 = self.layer3(x2)
         return x3 # полученный (вычисленный) тензор возвращается
+
+model = DigitClassModel() # создать модель IrisClassModel с числом входов 4 и числом выходов 3
+model.train() # перевести модель в режим обучения
+
+
+epochs = 10 # число эпох обучения
+batch_size = 12 # размер батча
+
+d_train = DigitDataset() # создать объект класса IrisDataset
+train_data = data.DataLoader(d_train, batch_size = batch_size, shuffle=True, drop_last=False) # создать объект класса DataLoader с размером пакетов batch_size и перемешиванием образов выборки
+
+
+optimizer = optim.Adam(params=model.parameters(), lr=0.01) # создать оптимизатор Adam для обучения модели с шагом обучения 0.01 optim.Adam(params=model.parameters(), lr=0.01)
+loss_func = torch.nn.CrossEntropyLoss() # создать функцию потерь с помощью класса CrossEntropyLoss (используется при многоклассовой классификации)
+
+for _e in range(epochs): # итерации по эпохам
+    for x_train, y_train in train_data:
+        predict = model(x_train) # вычислить прогноз модели для данных x_train
+        loss = loss_func(predict, y_train) # вычислить значение функции потерь
+
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+model.eval() # перевести модель в режим эксплуатации
+predict = model(d_train.data) # выполнить прогноз модели по всем данным выборки
+p = torch.argmax(predict, dim=1)
+Q = torch.mean(d_train.target == p).float()).item() # вычислить долю верных классификаций (сохранить, как вещественное число, а не тензор)
