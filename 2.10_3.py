@@ -75,4 +75,4 @@ for _e in range(epochs): # итерации по эпохам
 model.eval() # перевести модель в режим эксплуатации
 predict = model(d_train.data) # выполнить прогноз модели по всем данным выборки
 p = torch.argmax(predict, dim=1)
-Q = torch.mean(d_train.target == p).float()).item() # вычислить долю верных классификаций (сохранить, как вещественное число, а не тензор)
+Q = torch.mean((d_train.target == p).float()).item() # вычислить долю верных классификаций (сохранить, как вещественное число, а не тензор)
