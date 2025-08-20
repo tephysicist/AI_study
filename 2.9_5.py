@@ -24,10 +24,15 @@ class FuncModel(nn.Module):
         # 1-й слой: число входов 3 (x, x^2, x^3), число нейронов 1
 
     def forward(self, x):
+        '''
         xx = torch.empty(x.size(0), 3)
         xx[:, 0] = x
         xx[:, 1] = x ** 2
         xx[:, 2] = x ** 3
+        y = self.layer1(xx)
+        '''
+        x.unsqueeze_(-1)
+        xx = torch.cat([x, x ** 2, x ** 3], dim=1)
         y = self.layer1(xx)
         return y
 
@@ -38,10 +43,10 @@ epochs = 20 # число эпох обучения
 batch_size = 10 # размер батча
 
 d_train = FuncDataset() # создать объект класса FuncDataset
-train_data = data.DataLoader(d_train, batch_size = batch_size, shuffle=True, drop_last=False) # создать объект класса DataLoader с размером пакетов batch_size и перемешиванием образов выборки
+train_data = data.DataLoader(d_train, batch_size = batch_size, shuffle=True) # создать объект класса DataLoader с размером пакетов batch_size и перемешиванием образов выборки
 
 
-optimizer = optim.RMSprop(params=model.parameters(), lr=0.01) # создать оптимизатор Adam для обучения модели с шагом обучения 0.01
+optimizer = optim.RMSprop(params=model.parameters(), lr=0.1) # создать оптимизатор Adam для обучения модели с шагом обучения 0.01
 loss_func = torch.nn.MSELoss() # создать функцию потерь с помощью класса MSELoss
 
 for _e in range(epochs): # итерации по эпохам
