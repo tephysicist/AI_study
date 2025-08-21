@@ -20,3 +20,10 @@ class Mynn(nn.Module):
 model = Mynn()
 opt = optim.Adam(params=model.parameters(), lr=0.02)
 loss_func = nn.CrossEntropyLoss()
+
+data_state_dict = {
+    'loss': loss_func.state_dict(),
+    'opt': opt.state_dict(),
+    'model': model.state_dict()
+}
+torch.save(data_state_dict, 'my_data_state.tar')
