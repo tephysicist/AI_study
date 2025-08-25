@@ -7,7 +7,7 @@ class FuncModel(nn.Module):
     def __init__(self):
         super().__init__()
         # модель однослойной полносвязной нейронной сети:
-        layer1 = # 1-й слой: число входов 5 (x, x^2, x^3, x^4, x^5), число нейронов 1
+        self.layer1 = nn.Linear(in_features=5, out_features=1) # 1-й слой: число входов 5 (x, x^2, x^3, x^4, x^5), число нейронов 1
 
     def forward(self, x):
         x.unsqueeze_(-1)
@@ -18,7 +18,7 @@ class FuncModel(nn.Module):
 
 torch.manual_seed(1)
 
-model = # создать модель FuncModel
+model = FuncModel() # создать модель FuncModel
 
 epochs = 20 # число эпох обучения
 batch_size = 16 # размер батча
@@ -29,44 +29,46 @@ data_y = torch.sin(2 * data_x) - 0.3 * torch.cos(8 * data_x) + 0.1 * data_x ** 2
 
 ds = data.TensorDataset(data_x, data_y) # создание dataset
 d_train, d_val = # разделить ds на две части в пропорции: 70% на 30%
-train_data = # создать объект класса DataLoader для d_train с размером пакетов batch_size и перемешиванием образов выборки
-train_data_val = # создать объект класса DataLoader для d_val с размером пакетов batch_size и без перемешивания образов выборки
+train_data = data.DataLoader(d_train, batch_size=batch_size, shuffle=True) # создать объект класса DataLoader для d_train с размером пакетов batch_size и перемешиванием образов выборки
+train_data_val = data.DataLoader(d_val, batch_size=batch_size, shuffle=False) # создать объект класса DataLoader для d_val с размером пакетов batch_size и без перемешивания образов выборки
 
-optimizer = # создать оптимизатор RMSprop для обучения модели с шагом обучения 0.01
-loss_func = # создать функцию потерь с помощью класса MSELoss
+optimizer = optim.RMSprop(params=model.parameters(), lr=0.01) # создать оптимизатор RMSprop для обучения модели с шагом обучения 0.01
+loss_func = nn.MSELoss() # создать функцию потерь с помощью класса MSELoss
 
 loss_lst_val = []  # список значений потерь при валидации
 loss_lst = []  # список значений потерь при обучении
 
 for _e in range(epochs):
-    # перевести модель в режим обучения
+    model.train() # перевести модель в режим обучения
     loss_mean = 0 # вспомогательные переменные для вычисления среднего значения потерь при обучении
     lm_count = 0
 
     for x_train, y_train in train_data:
-        predict = # вычислить прогноз модели для данных x_train
-        loss = # вычислить значение функции потерь
+        predict = model(x_train) # вычислить прогноз модели для данных x_train
+        loss = loss_func(predict, y_train) # вычислить значение функции потерь
 
-        # сделать один шаг градиентного спуска для корректировки параметров модели
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step() # сделать один шаг градиентного спуска для корректировки параметров модели
 
         # вычисление среднего значения функции потерь по всей выборке
         lm_count += 1
         loss_mean = 1 / lm_count * loss.item() + (1 - 1 / lm_count) * loss_mean
 
     # валидация модели
-    # перевести модель в режим эксплуатации
+    model.eval() # перевести модель в режим эксплуатации
     Q_val = 0
     count_val = 0
 
     for x_val, y_val in train_data_val:
         with torch.no_grad():
-            # для x_val, y_val вычислить потери с помощью функции loss_func
+            loss_val = loss_func(model(x_val), y_val) # для x_val, y_val вычислить потери с помощью функции loss_func
 
     # сохранить средние потери, вычисленные по выборке валидации, в переменной Q_val
 
     loss_lst.append(loss_mean)
     loss_lst_val.append(Q_val)
 
-# перевести модель в режим эксплуатации
-# выполнить прогноз модели по всем данным выборки (ds.data)
-Q = # вычислить потери с помощью loss_func по всем данным выборки ds; значение Q сохранить в виде вещественного числа
+model.eval() # перевести модель в режим эксплуатации
+predict = model(ds.data) # выполнить прогноз модели по всем данным выборки (ds.data)
+Q = loss_func(predict, data_y) # вычислить потери с помощью loss_func по всем данным выборки ds; значение Q сохранить в виде вещественного числа
