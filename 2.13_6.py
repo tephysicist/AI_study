@@ -28,7 +28,7 @@ data_x = torch.arange(-5, 5, 0.05) #тензоры data_x, data_y не меня�
 data_y = torch.sin(2 * data_x) - 0.3 * torch.cos(8 * data_x) + 0.1 * data_x ** 2
 
 ds = data.TensorDataset(data_x, data_y) # создание dataset
-d_train, d_val = data.random_split(dataset, [0.7, 0.3]) # разделить ds на две части в пропорции: 70% на 30%
+d_train, d_val = data.random_split(ds, [0.7, 0.3]) # разделить ds на две части в пропорции: 70% на 30%
 train_data = data.DataLoader(d_train, batch_size=batch_size, shuffle=True) # создать объект класса DataLoader для d_train с размером пакетов batch_size и перемешиванием образов выборки
 train_data_val = data.DataLoader(d_val, batch_size=batch_size, shuffle=False) # создать объект класса DataLoader для d_val с размером пакетов batch_size и без перемешивания образов выборки
 
@@ -45,7 +45,7 @@ for _e in range(epochs):
 
     for x_train, y_train in train_data:
         predict = model(x_train) # вычислить прогноз модели для данных x_train
-        loss = loss_func(predict, y_train) # вычислить значение функции потерь
+        loss = loss_func(predict, y_train.unsqueeze(-1)) # вычислить значение функции потерь
 
         optimizer.zero_grad()
         loss.backward()
@@ -62,9 +62,10 @@ for _e in range(epochs):
 
     for x_val, y_val in train_data_val:
         with torch.no_grad():
-            loss = loss_func(model(x_val), y_val) # для x_val, y_val вычислить потери с помощью функции loss_func
+            loss = loss_func(model(x_val), y_val.unsqueeze(-1)) # для x_val, y_val вычислить потери с помощью функции loss_func
             count_val += 1
-            Q_val = 1 / count_val * loss.item() + (1 - 1 / count_val) * Q_val
+            Q_val += loss.item()
+    Q_val /= count_val
 
     # сохранить средние потери, вычисленные по выборке валидации, в переменной Q_val
 
@@ -72,5 +73,5 @@ for _e in range(epochs):
     loss_lst_val.append(Q_val)
 
 model.eval() # перевести модель в режим эксплуатации
-predict = model(ds.data) # выполнить прогноз модели по всем данным выборки (ds.data)
-Q = loss_func(predict, data_y) # вычислить потери с помощью loss_func по всем данным выборки ds; значение Q сохранить в виде вещественного числа
+predict = model(data_x) # выполнить прогноз модели по всем данным выборки (ds.data)
+Q = loss_func(predict, data_y.unsqueeze(-1)).item() # вычислить потери с помощью loss_func по всем данным выборки ds; значение Q сохранить в виде вещественного числа
