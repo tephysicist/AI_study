@@ -28,7 +28,7 @@ data_x = torch.arange(-5, 5, 0.05) #тензоры data_x, data_y не меня�
 data_y = torch.sin(2 * data_x) - 0.3 * torch.cos(8 * data_x) + 0.1 * data_x ** 2
 
 ds = data.TensorDataset(data_x, data_y) # создание dataset
-d_train, d_val = # разделить ds на две части в пропорции: 70% на 30%
+d_train, d_val = data.random_split(dataset, [0.7, 0.3]) # разделить ds на две части в пропорции: 70% на 30%
 train_data = data.DataLoader(d_train, batch_size=batch_size, shuffle=True) # создать объект класса DataLoader для d_train с размером пакетов batch_size и перемешиванием образов выборки
 train_data_val = data.DataLoader(d_val, batch_size=batch_size, shuffle=False) # создать объект класса DataLoader для d_val с размером пакетов batch_size и без перемешивания образов выборки
 
@@ -62,7 +62,9 @@ for _e in range(epochs):
 
     for x_val, y_val in train_data_val:
         with torch.no_grad():
-            loss_val = loss_func(model(x_val), y_val) # для x_val, y_val вычислить потери с помощью функции loss_func
+            loss = loss_func(model(x_val), y_val) # для x_val, y_val вычислить потери с помощью функции loss_func
+            count_val += 1
+            Q_val = 1 / count_val * loss.item() + (1 - 1 / count_val) * Q_val
 
     # сохранить средние потери, вычисленные по выборке валидации, в переменной Q_val
 
