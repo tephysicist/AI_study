@@ -7,7 +7,7 @@ class FuncModel(nn.Module):
     def __init__(self):
         super().__init__()
         # модель однослойной полносвязной нейронной сети:
-        self.layer1 = nn.Linear(in_features=5, out_features=1) # 1-й слой: число входов 5 (x, x^2, x^3, x^4, x^5), число нейронов 1
+        self.layer = nn.Linear(in_features=5, out_features=1) # 1-й слой: число входов 5 (x, x^2, x^3, x^4, x^5), число нейронов 1
 
     def forward(self, x):
         x.unsqueeze_(-1)
