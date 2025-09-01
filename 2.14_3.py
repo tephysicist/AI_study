@@ -31,7 +31,7 @@ train_data = data.DataLoader(d_train, batch_size=batch_size, shuffle=True)
 train_data_val = data.DataLoader(d_val, batch_size=len(d_val), shuffle=False)
 
 
-model = FuncModel(N)
+model = FuncModel(N) # most probable N-1
 optimizer = optim.RMSprop(params=model.parameters(), lr=0.01) # создайте оптимизатор RMSprop для модели model с шагом обучения 0.01 и weight_decay=10
 loss_func = nn.MSELoss() # сформируйте функцию потерь с помощью класса MSELoss
 
