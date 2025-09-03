@@ -6,7 +6,7 @@ import torch.optim as optim
 class Mynn(nn.Module):
     def __init__(self):
         super().__init__()
-        self.layer1 = nn.Linear(in_features=10, out_features=8, bias=False)
+        self.layer1 = nn.Linear(in_features=10, out_features=8, bias=True)
         self.layer2 = nn.Linear(in_features=8, out_features=4, bias=True)
         self.out = nn.Linear(in_features=4, out_features=6, bias=True)
 
