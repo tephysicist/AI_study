@@ -12,9 +12,13 @@ class Funcnn(nn.Module):
         self.layer3 = nn.Linear(in_features=16, out_features=3)
     
     def forward(self, x):
-        x = F.relu()
+        x = F.relu(self.layer1(x))
+        x = F.relu(self.layer2(x))
+        x = self.layer3(x)
         return x
     
 
+model = Funcnn()
 model.eval()
 x = torch.rand(13)
+predict = model(x)
