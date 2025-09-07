@@ -21,10 +21,26 @@ class ImageNN(nn.Module):
         return x
 
 model = ImageNN()
+epochs = 2
+batch_size=16
+
 ds = data.TensorDataset(_global_var_data_x, _global_var_target)
 d_train, d_test = data.random_split(ds, [0.7, 0.3])
-train_data = data.DataLoader(d_train, batch_size=16, shuffle=True)
+train_data = data.DataLoader(d_train, batch_size=batch_size, shuffle=True)
 test_data = data.DataLoader(d_test, batch_size=len(d_test), shuffle=False)
 
 optimizer = optim.Adam(params=model.parameters(), lr=0.01, weight_decay=0.1)
 loss_func = nn.CrossEntropyLoss()
+
+epochs = 2
+batch_size=16
+
+for _e in range(epochs): # итерации по эпохам
+    for x_train, y_train in train_data:
+        predict = model(x_train) # вычислить прогноз модели для данных x_train
+        loss = loss_func(predict, y_train) # вычислить значение функции потерь
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
