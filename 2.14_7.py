@@ -10,7 +10,7 @@ class ImageNN(nn.Module):
         self.layer1 = nn.Linear(in_features=64, out_features=64)
         self.layer2 = nn.Linear(in_features=64, out_features=32)
         self.layer3 = nn.Linear(in_features=32, out_features=10)
-        self.dropout = nn.Dropout(0.3)
+        self.dropout = nn.Dropout1d(0.3)
     
     def forward(self, x):
         x = F.relu(self.layer1(x))
@@ -24,7 +24,7 @@ model = ImageNN()
 epochs = 2
 batch_size=16
 
-ds = data.TensorDataset(_global_var_data_x, _global_var_target)
+ds = data.TensorDataset(_global_var_data_x, _global_var_target) # size of _global_var_data_x is (1797, 64); type float32; size of _global_var_target - целевые значения (метки классов) размерностью (1797, ); type long
 d_train, d_test = data.random_split(ds, [0.7, 0.3])
 train_data = data.DataLoader(d_train, batch_size=batch_size, shuffle=True)
 test_data = data.DataLoader(d_test, batch_size=len(d_test), shuffle=False)
@@ -32,9 +32,7 @@ test_data = data.DataLoader(d_test, batch_size=len(d_test), shuffle=False)
 optimizer = optim.Adam(params=model.parameters(), lr=0.01, weight_decay=0.1)
 loss_func = nn.CrossEntropyLoss()
 
-epochs = 2
-batch_size=16
-
+model.train()
 for _e in range(epochs): # итерации по эпохам
     for x_train, y_train in train_data:
         predict = model(x_train) # вычислить прогноз модели для данных x_train
@@ -44,3 +42,9 @@ for _e in range(epochs): # итерации по эпохам
         loss.backward()
         optimizer.step()
 
+model.eval() # перевести модель в режим эксплуатации
+with torch.no_grad():
+    predict = model(d_test.data) # выполнить прогноз модели по всем данным выборки
+    p = torch.argmax(predict, dim=1)
+
+Q = torch.mean((d_test.target == p).float()).item() # вычислить долю верных классификаций (сохранить, как вещественное число, а не тензор)
