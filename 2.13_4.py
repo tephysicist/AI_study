@@ -17,4 +17,4 @@ class FuncDataset(data.Dataset):
 dataset = FuncDataset()
 d_train, d_val = data.random_split(dataset, [0.8, 0.2])
 train_data = data.DataLoader(d_train, batch_size = 16, shuffle=True, drop_last=False)
-train_data_val = data.DataLoader(d_train, batch_size = 100, shuffle=False, drop_last=False)
+train_data_val = data.DataLoader(d_val, batch_size = 100, shuffle=False, drop_last=False)
