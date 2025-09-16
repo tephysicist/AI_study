@@ -22,4 +22,29 @@ class CancerNN(nn.Module):
 
 model = CancerNN(inputs=30, layer1neurons=32, layer2neurons=20 outneurons=1)
 
+batch_size = 16
+epochs = 5
 ds = data.TensorDataset(_global_var_data_x, _global_var_target.float())
+d_train, d_test = data.random_split(ds, [0.7, 0.3])
+train_data = data.DataLoader(d_train, batch_size=batch_size, shuffle=True)
+test_data = data.DataLoader(d_test, batch_size=len(d_test), shuffle=False)
+
+optimizer = optim.Adam(params=model.parameters(), lr=0.01)
+loss_func = nn.BCEWithLogitsLoss()
+
+model.train()
+for _e in range(epochs): # итерации по эпохам
+    for x_train, y_train in train_data:
+        predict = model(x_train) # вычислить прогноз модели для данных x_train
+        loss = loss_func(predict, y_train) # вычислить значение функции потерь
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+model.eval() # перевести модель в режим эксплуатации
+with torch.no_grad():
+    predict = model(d_test.data) # выполнить прогноз модели по всем данным выборки
+    p = torch.argmax(predict, dim=1)
+
+Q = torch.mean((d_test.target == p).float()).item() # вычислить долю верных классификаций (сохранить, как вещественное число, а не тензор)
