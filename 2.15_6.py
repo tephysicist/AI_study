@@ -10,13 +10,14 @@ class CancerNN(nn.Module):
         self.layer1 = nn.Linear(in_features=inputs, out_features=layer1neurons, bias=False)
         self.layer2 = nn.Linear(in_features=layer1neurons, out_features=layer2neurons, bias=False)
         self.layer3 = nn.Linear(in_features=layer2neurons, out_features=outneurons)
-        self.bn = nn.BatchNorm1d(num_hidden) # output after 1st and 2nd layer has dimension 1 = BatchNorm1d
+        self.bn1 = nn.BatchNorm1d(layer1neurons) # output after 1st and 2nd layer has dimension 1 => BatchNorm1d
+        self.bn2 = nn.BatchNorm1d(layer2neurons) # output after 1st and 2nd layer has dimension 1 => BatchNorm1d
     
     def forward(self, x):
         x = F.relu(self.layer1(x))
-        x = self.bn(x)
+        x = self.bn1(x)
         x = F.relu(self.layer2(x))
-        x = self.bn(x)
+        x = self.bn2(x)
         x = self.layer3(x)
         return x
 
@@ -36,7 +37,7 @@ model.train()
 for _e in range(epochs): # итерации по эпохам
     for x_train, y_train in train_data:
         predict = model(x_train) # вычислить прогноз модели для данных x_train
-        loss = loss_func(predict, y_train) # вычислить значение функции потерь
+        loss = loss_func(predict, y_train.unsqueeze(-1)) # вычислить значение функции потерь
 
         optimizer.zero_grad()
         loss.backward()
