@@ -20,4 +20,5 @@ model.add_module('block2', block_bm_dp)
 model.add_module('block3', block_bm_dp)
 model.add_module('output', nn.Linear(32, 10, bias=True))
 
+model.eval()
 predict = model(x)
