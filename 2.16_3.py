@@ -5,7 +5,6 @@ batch_size=16
 x = torch.rand(batch_size, 12) # тензор x в программе не менять
 
 # здесь продолжайте программу
-# I need more time to evaluate.
 model = nn.Sequential()
 model.add_module('layer_1', nn.Linear(12, 24, bias=True))
 model.add_module('act1', nn.Tanh())
