@@ -17,7 +17,7 @@ class ModelNN(nn.Module):
             nn.ReLU(),
             nn.Linear(32, 1, bias=True)
         )
-    def forward(a, b):
+    def forward(self, a, b):
         sum = self.inp_1(a) + self.inp_2(b)
         return self.out(sum)
 
