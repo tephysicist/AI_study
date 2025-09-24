@@ -18,7 +18,7 @@ class ModelNN(nn.Module):
             nn.Linear(64, 32, bias=True),
             nn.Tanh()
         )
-    def forward(x):
+    def forward(self, x):
         x = self.inp(x)
         y = self.out_1(x)
         t = self.out_2(x)
