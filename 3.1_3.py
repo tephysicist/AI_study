@@ -17,5 +17,6 @@ kernel = torch.rand((C, ) + kernel_size) # в программе не менят
 
 predict = torch.empty(H_out, W_out, dtype=torch.float32)
 
-
-# здесь продолжайте программу
+for i in range(0, H_out):
+    for j in range(0, W_out):
+        predict[i, j] = torch.sum(x_img[:, i*stride[0]:kernel_size[0]+i*stride[0], j*stride[1]:kernel_size[1]+j*stride[1]] * kernel)
