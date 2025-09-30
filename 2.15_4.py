@@ -9,7 +9,7 @@ class TelNN(nn.Module):
         super().__init__()
         self.layer1 = nn.Linear(in_features=inputs, out_features=layer1neurons, bias=False)
         self.layer2 = nn.Linear(in_features=layer1neurons, out_features=outneurons)
-        self.bn = nn.BatchNorm1d(num_hidden) # output after 1st layer has dimension 1 = BatchNorm1d
+        self.bn = nn.BatchNorm1d(layer1neurons) # output after 1st layer has dimension 1 = BatchNorm1d
     
     def forward(self, x):
         x = F.relu(self.layer1(x))
