@@ -21,7 +21,7 @@ class CancerNN(nn.Module):
         x = self.layer3(x)
         return x
 
-model = CancerNN(inputs=30, layer1neurons=32, layer2neurons=20 outneurons=1)
+model = CancerNN(inputs=30, layer1neurons=32, layer2neurons=20, outneurons=1)
 
 batch_size = 16
 epochs = 5
@@ -44,8 +44,9 @@ for _e in range(epochs): # итерации по эпохам
         optimizer.step()
 
 model.eval() # перевести модель в режим эксплуатации
+x_test, y_test = next(iter(test_data))
 with torch.no_grad():
-    predict = model(d_test.data) # выполнить прогноз модели по всем данным выборки
-    p = torch.argmax(predict, dim=1)
+    p = model(x_test)
+    Q = torch.sum(torch.sign(p.flatten()) == (2 * y_test.flatten() - 1)).item()
 
-Q = torch.mean((d_test.target == p).float()).item() # вычислить долю верных классификаций (сохранить, как вещественное число, а не тензор)
+Q /= len(d_test)
