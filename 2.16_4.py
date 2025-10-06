@@ -9,7 +9,7 @@ block_bm_dp = nn.Sequential(
     nn.Linear(32, 32, bias=False),
     nn.ELU(),
     nn.BatchNorm1d(32),
-    nn.Dropout1d(0.3)
+    nn.Dropout(0.3)
 )
 
 model = nn.Sequential()
