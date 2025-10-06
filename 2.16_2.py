@@ -29,14 +29,11 @@ train_data = data.DataLoader(ds, batch_size=batch_size, shuffle=True) # созд
 optimizer = optim.RMSprop(params=model.parameters(), lr=0.01) # создать оптимизатор RMSprop для обучения модели с шагом обучения 0.01
 loss_func = nn.MSELoss() # создать функцию потерь с помощью класса MSELoss
 
-
-
-
-# перевести модель в режим обучения
+model.train()
 for _e in range(epochs): # итерации по эпохам
     for x_train, y_train in train_data:
-        predict = # вычислить прогноз модели для данных x_train
-        loss = # вычислить значение функции потерь
+        predict = model(x_train)  # вычислить прогноз модели для данных x_train
+        loss = loss_func(predict, y_train.unsqueeze(-1)) # вычислить значение функции потерь
 
         optimizer.zero_grad()
         loss.backward()
