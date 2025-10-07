@@ -16,5 +16,21 @@ model = nn.Sequential(
     nn.Linear(64, 10, bias=True)
 )
 
-model.train()
+test_data = data.DataLoader(ds, batch_size=len(ds), shuffle=False)
 
+model.load_state_dict(_global_model_state)
+
+model.eval()
+predict = model(test_data.data)
+p = torch.argmax(predict, dim=1)
+Q = torch.mean((test_data.target == p).float()).item() 
+
+'''
+x_test, y_test = next(iter(test_data))
+with torch.no_grad():
+    p = model(x_test)
+    p = torch.argmax(p, dim=1)
+    Q = torch.mean(p.flatten() == y_test.flatten()).item()
+
+Q /= len(ds)
+'''
