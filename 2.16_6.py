@@ -3,7 +3,7 @@ import torch.nn as nn
 
 # здесь объявляйте класс модели
 class ModelNN(nn.Module):
-    def __init__():
+    def __init__(self):
         super().__init__()
         self.inp = nn.Sequential(
             nn.Linear(32, 64, bias=False),
