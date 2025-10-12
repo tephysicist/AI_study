@@ -11,12 +11,12 @@ class DeepNetwork(nn.Module):
         self.layers = nn.ModuleList(
             [nn.Linear(32, 32) for i in range(n_hidden_layers)]
         )
-        self.outut = self.input = nn.Sequential(nn.Linear(11, 32, bias=False))
+        self.output = nn.Sequential(nn.Linear(32, 5, bias=False))
     def forward(self, x):
         x = self.input(x)
         for layer in self.layers:
             x = torch.relu(layer(x))
-        x = self.outut(x)
+        x = self.output(x)
         return x
             
 
