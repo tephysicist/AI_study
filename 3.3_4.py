@@ -3,7 +3,11 @@ import torch.nn as nn
 
 
 # здесь объявляйте класс ImageNormalize
-class
+class ImageNormalize(nn.Module):        
+    def forward(self, x):
+        min, max = x.min(), x.max()
+        x = (x - min)/(max - min)
+        return x 
 
 
 # генерация образов выборки
