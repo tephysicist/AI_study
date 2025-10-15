@@ -3,8 +3,8 @@ import torch.nn as nn
 
 
 # здесь объявляйте класс модели
-class CNN():
-    def __init__():
+class CNN(nn.Module):
+    def __init__(self):
         super().__init__()
         self.net1 = nn.Sequential(
             nn.Conv2d(in_channels=3, out_channels=16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=True),
@@ -20,6 +20,19 @@ class CNN():
             nn.Sigmoid(),
             nn.BatchNorm1d(64)
         )
+        # For example, if input is [batch_size, 3, 16, 16], after net1:
+        # - Conv2d: [batch_size, 16, 16, 16]
+        # - MaxPool2d: [batch_size, 16, 8, 8]
+        #recalculate:
+        # - Conv2d: [batch_size, 32, 16, 16]
+        # - MaxPool2d: [batch_size, 32, 8, 8]
+        # - Flatten: [batch_size, 32 * 8 * 8] = [batch_size, 2048]
+        output = Linear(x, 10)
+    def forward(self, x1, x2):
+        x1 = self.net1(x1)
+        x2 = self.net2(x2)
+        x = torch.cat((x1, x2), dim=1)  # Concatenate along dim=1: [batch_size, 2048 + 64]
+        return self.output(x)
 
 
 
@@ -30,3 +43,6 @@ data_x = torch.rand(batch_size, 12)
 
 
 # здесь продолжайте программу
+model = CNN()
+model.eval()
+predict = model(data_img, data_x)
