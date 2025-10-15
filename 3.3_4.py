@@ -1,14 +1,12 @@
 import torch
 import torch.nn as nn
 
-
 # здесь объявляйте класс ImageNormalize
 class ImageNormalize(nn.Module):        
     def forward(self, x):
         min, max = x.min(), x.max()
         x = (x - min)/(max - min)
         return x 
-
 
 # генерация образов выборки
 total = 100 # размер выборки
@@ -35,8 +33,7 @@ def _generate_img(_H, _W, _Hc, _Wc, _x, _y, _circle, _tr): # вспомогат�
 
 
 
-
-transform = # создайте объект класса ImageNormalize
+transform = ImageNormalize()  # создайте объект класса ImageNormalize
 data_y = torch.tensor([(torch.randint(0, H-Hc, (1, )), torch.randint(0, W-Wc, (1, ))) for _ in range(total)])
 data_x = torch.cat([_generate_img(H, W, Hc, Wc, _x[0], _x[1], circle, transform) for _x in data_y], dim=0)
 
@@ -51,7 +48,11 @@ model = nn.Sequential(
     nn.ReLU(inplace=True),
     nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2), padding=0, dilation=1, return_indices=False, ceil_mode=False),
     nn.Flatten(),
-    nn.Linear(1024, 2, bias=True) #2048
+    nn.Linear(2048, 2, bias=True) #2048
 )
-# пропустите через модель выборку data_x
-Q = # вычислите величину потерь, используя функцию loss_func = nn.MSELoss()
+
+model.eval()
+loss_func = nn.MSELoss()
+with torch.no_grad():
+    predict = model(data_x) # пропустите через модель выборку data_x
+    Q = loss_func(predict, data_y.float()) # вычислите величину потерь, используя функцию loss_func = nn.MSELoss()
