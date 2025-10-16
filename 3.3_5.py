@@ -23,11 +23,10 @@ class CNN(nn.Module):
         # For example, if input is [batch_size, 3, 16, 16], after net1:
         # - Conv2d: [batch_size, 16, 16, 16]
         # - MaxPool2d: [batch_size, 16, 8, 8]
-        #recalculate:
-        # - Conv2d: [batch_size, 32, 16, 16]
-        # - MaxPool2d: [batch_size, 32, 8, 8]
-        # - Flatten: [batch_size, 32 * 8 * 8] = [batch_size, 2048]
-        output = Linear(x, 10)
+        # - Conv2d: [batch_size, 32, 8, 8]
+        # - MaxPool2d: [batch_size, 32, 4, 4]
+        # - Flatten: [batch_size, 32 * 4 * 4] = [batch_size, 512] 512+64
+        output = Linear(576, 10)
     def forward(self, x1, x2):
         x1 = self.net1(x1)
         x2 = self.net2(x2)
