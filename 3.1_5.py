@@ -14,7 +14,7 @@ kernel = torch.rand((C, ) + kernel_size) # в программе не менят
 
 # здесь продолжайте программу
 x_img_p = torch.zeros((C, H + 2*padding, W + 2*padding))
-x_img_p = x_img_p[:, padding:H+padding, padding:W+padding] = x_img
+x_img_p[:, padding:H+padding, padding:W+padding] = x_img
 
 predict = torch.empty(H_out, W_out, dtype=torch.float32)
 for i in range(0, H_out):
