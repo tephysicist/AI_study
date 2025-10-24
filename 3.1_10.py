@@ -12,7 +12,7 @@ x = torch.rand((H, W)) # карта признаков (в программе н
 
 # здесь продолжайте программу
 x_p = torch.zeros((H + 2*padding, W + 2*padding))
-x_p[padding:H + 2*padding, padding:W + 2*padding] = x
+x_p[padding:H + padding, padding:W + padding] = x
 
 res_pool = torch.empty(H_out, W_out, dtype=torch.float32)
 
