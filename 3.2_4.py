@@ -12,4 +12,4 @@ x = torch.randint(0, 255, (C, H, W), dtype=torch.float32) # тензор x в п
 # здесь продолжайте программу
 layer_nn = torch.nn.Conv2d(in_channels=C, out_channels=1, kernel_size=kernel_size, stride=stride, padding=padding)
 
-t_out = layer_nn(x) # layer_nn(x.unsqueeze(0))
+t_out = layer_nn(x.unsqueeze(0))
