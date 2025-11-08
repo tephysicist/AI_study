@@ -26,7 +26,7 @@ class CNN(nn.Module):
         # - Conv2d: [batch_size, 32, 8, 8]
         # - MaxPool2d: [batch_size, 32, 4, 4]
         # - Flatten: [batch_size, 32 * 4 * 4] = [batch_size, 512] 512+64
-        output = Linear(576, 10)
+        self.output = nn.Linear(576, 10)
     def forward(self, x1, x2):
         x1 = self.net1(x1)
         x2 = self.net2(x2)
