@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 
-class BottleneckBlock1 (nn.Module):
+class BottleneckBlock1(nn.Module):
     def __init__(self):
         super().__init__()
         self.bn = nn.Sequential(
