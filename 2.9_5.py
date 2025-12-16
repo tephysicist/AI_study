@@ -47,7 +47,7 @@ train_data = data.DataLoader(d_train, batch_size = batch_size, shuffle=True) # �
 
 
 optimizer = optim.RMSprop(params=model.parameters(), lr=0.1) # создать оптимизатор Adam для обучения модели с шагом обучения 0.01
-loss_func = torch.nn.MSELoss() # создать функцию потерь с помощью класса MSELoss
+loss_func = nn.MSELoss() # создать функцию потерь с помощью класса MSELoss
 
 for _e in range(epochs): # итерации по эпохам
     for x_train, y_train in train_data:
