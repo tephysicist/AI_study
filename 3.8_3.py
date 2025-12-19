@@ -20,22 +20,22 @@ class BasicBlock1(nn.Module):
         )
     def forward(self, x):
         y = self.bb(x)
-        return nn.ReLU(y + self.layer(x))
+        return nn.functional.relu(y + self.layer(x))
 
 class BasicBlock2(nn.Module):
     def __init__(self):
         super().__init__()
         self.bb = nn.Sequential(
             nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(64),
+            nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False),
+            nn.BatchNorm2d(128),
             #nn.ReLU(inplace=True)
         )
     def forward(self, x):
         y = self.bb(x)
-        return nn.ReLU(y + x)
+        return nn.functional.relu(y + x)
 
 
 batch_size = 8
