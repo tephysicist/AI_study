@@ -20,8 +20,8 @@ class BottleneckBlock1(nn.Module):
             nn.BatchNorm2d(256)
         )
     def forward(self, x):
-        y = self.bb(x)
-        return nn.ReLU(y + self.layer(x))
+        y = self.bn(x)
+        return nn.functional.relu(y + self.layer(x))
 
 class BottleneckBlock2(nn.Module):
     def __init__(self):
@@ -37,8 +37,8 @@ class BottleneckBlock2(nn.Module):
             nn.BatchNorm2d(256)
         )
     def forward(self, x):
-        y = self.bb(x)
-        return nn.ReLU(y + x)
+        y = self.bn(x)
+        return nn.functional.relu(y + x)
 
 batch_size = 8
 x = torch.rand(batch_size, 3, 32, 32) # тензор x в программе не менять
