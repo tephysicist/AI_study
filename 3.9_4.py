@@ -14,7 +14,7 @@ cats = weights.meta['categories']
 model = models.resnet18()
 model.eval()
 
-img = transforms(img_pil).unsqueeze()
+img = transforms(img_pil).unsqueeze(0)
 results = model(img).squeeze()
 res = results.softmax(dim=0).sort(descending=True)
 
