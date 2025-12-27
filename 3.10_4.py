@@ -10,10 +10,10 @@ img_pil = TF.to_pil_image(x)
 
 
 # здесь продолжайте программу
-weights = models.models.ResNet50_Weights.DEFAULT
+weights = models.ResNet50_Weights.DEFAULT
 transforms = weights.transforms()
 
-model = model.resnet50()
+model = models.resnet50()
 model.requires_grad_(False)
 model.fc = nn.Sequential(
     nn.Linear(512*4, 128, bias=True),
