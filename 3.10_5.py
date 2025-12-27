@@ -14,12 +14,12 @@ weights = models.ResNet50_Weights.DEFAULT
 transforms = weights.transforms()
 
 model = models.resnet50()
-model.requires_grad_(True)
 model.fc = nn.Sequential(
-    nn.Linear(512*4, 100, bias=True),
+    nn.Linear(512*4, 100, bias=False),
     nn.ReLU(inplace=True),
+    nn.BatchNorm1d(100),
     nn.Linear(100, 10, bias=True)
 )
-model.fc.requires_grad_(True)
 model.eval()
+
 with torch.no_grad(): predict = model(transforms(img_pil).unsqueeze(0))
