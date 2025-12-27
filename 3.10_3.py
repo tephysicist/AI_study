@@ -12,5 +12,5 @@ model = models.resnet34()
 model.requires_grad_(False)
 model.eval()
 
-img = transforms(img_pil).unsqueeze()
-results = model(img.unsqueeze(0))
+img = transforms(img_pil).unsqueeze(0)
+results = model(img)
