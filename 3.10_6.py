@@ -81,7 +81,7 @@ for _e in range(epochs):
     for x_val, y_val in train_data_val:
         with torch.no_grad():
             p = model(x_val)
-            loss = loss_func(model(x_val), y_val.unsqueeze(-1)) # для x_val, y_val вычислить потери с помощью функции loss_func
+            loss = loss_func(p, y_val.unsqueeze(-1)) # для x_val, y_val вычислить потери с помощью функции loss_func
             Q_val += loss.item()
             count_val += 1
 
