@@ -1,0 +1,29 @@
+import torch
+import torch.nn as nn
+
+
+# здесь объявляйте класс GetOutput
+class GetOutput(nn.Module):
+    def forward(self, x):
+        return x[1].squeeze(0)
+        
+
+
+# тензор x в программе не менять
+batch_size = 4
+seq_length = 8
+in_features = 10
+x = torch.rand(batch_size, seq_length, in_features)
+
+
+# здесь продолжайте программу
+model = nn.Sequential(
+    nn.RNN(input_size=in_features, hidden_size=15, num_layers=1, nonlinearity='tanh', bias=True, batch_first=True),
+    GetOutput(),
+    nn.ReLU(inplace=True),
+    nn.Linear(15, 5, bias=True)
+)
+
+model.eval()
+
+res = model(x)
