@@ -3,8 +3,8 @@ import torch.nn as nn
 
 
 # здесь объявляйте класс OutputModule
-class OutputModule():
-    def __init__():
+class OutputModule(nn.Module):
+    def __init__(self):
         super().__init__()
         self.act = nn.ReLU(inplace=True)
         self.layer = nn.Linear(25, 10, bias=True)
