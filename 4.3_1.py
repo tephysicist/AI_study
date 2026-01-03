@@ -19,4 +19,4 @@ model.weight_hh_l0.data = torch.tensor([[r]], dtype=torch.float32)
 model.weight_ih_l0.data = torch.tensor([[sigma_noise]], dtype=torch.float32)
 
 model.eval()
-x = model(noise.view(1, total, 1), x0.view(1, 1, 1))
+x, _ = model(noise.view(1, total, 1), x0.view(1, 1, 1))
