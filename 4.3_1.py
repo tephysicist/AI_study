@@ -13,11 +13,10 @@ x0 = torch.randn((1, )) * sigma # начальное значение векто
 
 
 # здесь продолжайте программу
-model = nn.Sequential(
-    nn.RNN(input_size=in_features, hidden_size=15, num_layers=1, nonlinearity='tanh', bias=True, batch_first=True)
-)
+model = nn.RNN(input_size=1, hidden_size=1, num_layers=1, nonlinearity='tanh', bias=False, batch_first=True)
 
-
+model.weight_hh_l0.data = torch.tensor([[r]], dtype=torch.float32)
+model.weight_ih_l0.data = torch.tensor([[sigma_noise]], dtype=torch.float32)
 
 model.eval()
-x = model(x)
+x = model(noise.view(1, total, 1), x0.view(1, 1, 1))
