@@ -12,13 +12,30 @@ class CharsDataset(data.Dataset):
         self.alphabet = set("".join(self.lines).lower())
         self.int_to_alpha = dict(enumerate(sorted(self.alphabet)))
         self.alpha_to_int = {b: a for a, b in self.int_to_alpha.items()}
-        self.num_characters = len(self.alphabet)
+        self.num_characters = len(self.alphabet) # size of the alphabet
         self.onehots = torch.eye(self.num_characters)
+
+        data = []
+        targets = []
+        for line in self.lines:
+            line = line.lower()
+            for i in range(len(line) - self.prev_chars):
+                data.append([self.alpha_to_int[line[x]] for x in range(i, i+self.prev_chars)])
+                ch = line[i+self.prev_chars]
+                targets.append(self.alpha_to_int[ch])
+        
+        self.data = torch.tensor(data)
+        self.targets = torch.tensor(targets)
+        self.length = len(data)
         
     def __getitem__(self, item):
-        _data = torch.vstack([self.onehots[self.alpha_to_int[x]] for x in range()])
-
+        return self.onehots[self.data[item]], self.targets[item]
+        
+    def __len__(self):
+        return self.length
 
 
 
 # здесь продолжайте программу
+d_train = CharsDataset(10)
+train_data = data.DataLoader(d_train, batch_size = 8, shuffle=True, drop_last=False)
