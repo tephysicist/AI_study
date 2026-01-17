@@ -5,9 +5,9 @@ import torch.nn as nn
 class CNV(nn.Module):
     def __init__(self):
         super().__init__()
-        self.layer1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=(3, 3), stride=1, padding=1)
+        self.layer1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=(3, 3), stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(16)
-        self.layer2 = nn.Conv2d(in_channels=16, out_channels=16, kernel_size=(3, 3), stride=1, padding=1)
+        self.layer2 = nn.Conv2d(in_channels=16, out_channels=16, kernel_size=(3, 3), stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(16)
         self.layer3 = nn.MaxPool2d(kernel_size=(2, 2), stride=2, padding=0, dilation=1, return_indices=False, ceil_mode=False)
 
