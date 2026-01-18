@@ -7,15 +7,15 @@ class DecoderBlock(nn.Module):
         super().__init__()
         self.transpose = nn.ConvTranspose2d(in_channels=32, out_channels=16, kernel_size=(2, 2),
                    stride=(2, 2), padding=0, output_padding=0,
-                   groups=1, bias=True, dilation=1, padding_mode='zeros')
+                   groups=1, bias=True, dilation=1)
         self.block = nn.Sequential(
-            nn.Conv2d(in_channels=32, out_channels=16, kernel_size=(3, 3), stride=1, padding=1),
+            nn.Conv2d(in_channels=32, out_channels=16, kernel_size=(3, 3), stride=1, padding=1, bias=False),
             nn.ReLU(inplace=True),
             nn.BatchNorm2d(16),
-            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=(3, 3), stride=1, padding=1),
+            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=(3, 3), stride=1, padding=1, bias=False),
             nn.ReLU(inplace=True),
             nn.BatchNorm2d(16),
-            nn.Conv2d(in_channels=16, out_channels=1, kernel_size=(1, 1), stride=1, padding=0)
+            nn.Conv2d(in_channels=16, out_channels=1, kernel_size=(1, 1), stride=1, padding=0, bias=True)
         )
  
     def forward(self, x, y):
