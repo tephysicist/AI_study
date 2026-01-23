@@ -39,7 +39,7 @@ class CharsDataset(data.Dataset):
 
 # здесь объявляйте класс модели нейронной сети
 class RNNNeuralNetwork(nn.Module):
-    def __init__(self, input_size, hidden_size = 32, output_size):
+    def __init__(self, input_size, output_size, hidden_size = 32):
         super().__init__()
         self.hidden_size = hidden_size
         self.input_size = input_size
@@ -60,7 +60,7 @@ train_data = data.DataLoader(d_train, batch_size = 8, shuffle=True, drop_last=Fa
 model = RNNNeuralNetwork(input_size=d_train.num_characters, output_size=d_train.num_characters) # создайте объект модели
 
 
-optimizer = optim(params=model.parameters(), lr=0.01) # оптимизатор Adam с шагом обучения 0.01
+optimizer = optim.Adam(params=model.parameters(), lr=0.01) # оптимизатор Adam с шагом обучения 0.01
 loss_func = nn.CrossEntropyLoss() # функция потерь - CrossEntropyLoss
 
 
@@ -71,16 +71,19 @@ model.train() # переведите модель в режим обучения
 for _e in range(epochs):
     for x_train, y_train in train_data:
         predict = model(x_train) # вычислите прогноз модели для x_train
-        loss = loss_func(predict, ) # вычислите потери для predict и y_train
+        loss = loss_func(predict, y_train) # вычислите потери для predict и y_train
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
 
-        # выполните один шаг обучения (градиентного спуска)
-
-
-# переведите модель в режим эксплуатации
+model.eval() # переведите модель в режим эксплуатации
 predict = "нейронная сеть ".lower() # начальная фраза
 total = 20 # число прогнозируемых символов (дополнительно к начальной фразе)
 
 
-# выполните прогноз следующих total символов
+# выполните прогноз следующих total символов print(d_train.alpha_to_int['н'])
+for _ in range(total):
+    s = model(predict)
 # выведите полученную строку на экран
