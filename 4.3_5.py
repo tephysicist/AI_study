@@ -85,5 +85,17 @@ total = 20 # число прогнозируемых символов (допо�
 
 # выполните прогноз следующих total символов print(d_train.alpha_to_int['н'])
 for _ in range(total):
-    s = model(predict)
+    line = predict[-10:]
+    data = []
+        targets = []
+        for line in self.lines:
+            line = line.lower()
+            for i in range(len(line) - self.prev_chars):
+                data.append([self.alpha_to_int[line[x]] for x in range(i, i+self.prev_chars)])
+                ch = line[i+self.prev_chars]
+                targets.append(self.alpha_to_int[ch])
+        
+        self.data = torch.tensor(data)
+        self.targets = torch.tensor(targets)
+    s = model(d)
 # выведите полученную строку на экран
