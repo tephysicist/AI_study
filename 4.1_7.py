@@ -13,5 +13,5 @@ x[0] = torch.randn(1) * std
 
 
 # здесь продолжайте программу
-for i in range(N):
+for i in range(1, N):
     x[i] = r * x[i-1] + torch.randn(1) * std_e
