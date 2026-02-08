@@ -8,7 +8,7 @@ class RNN(nn.Module):
     def __init__(self):
         super().__init__()
         self.hidden_size = 5
-        self.rnn = nn.RNN(input_size=1, hidden_size=self.hidden_size, num_layers=1, nonlinearity='tanh', bias=False, batch_first=True)
+        self.rnn = nn.RNN(input_size=1, hidden_size=self.hidden_size, num_layers=1, nonlinearity='tanh', bias=True, batch_first=True)
         self.layer = nn.Linear(self.hidden_size, 1, bias=True)
 
     def forward(self, x):
