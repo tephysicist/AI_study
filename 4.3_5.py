@@ -70,7 +70,7 @@ model.train() # переведите модель в режим обучения
 
 for _e in range(epochs):
     for x_train, y_train in train_data:
-        predict = model(x_train) # вычислите прогноз модели для x_train
+        predict = model(x_train).squeeze(0) # вычислите прогноз модели для x_train
         loss = loss_func(predict, y_train) # вычислите потери для predict и y_train
 
         optimizer.zero_grad()
