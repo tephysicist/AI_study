@@ -4,8 +4,7 @@ import torch.utils.data as data
 import torch.optim as optim
 
 
-
-# сюда копируйте класс CharsDataset из предыдущего подвига
+# the class is from 4.3_4.py
 class CharsDataset(data.Dataset):
     def __init__(self, prev_chars):
         self.prev_chars = prev_chars
@@ -37,65 +36,54 @@ class CharsDataset(data.Dataset):
         return self.length
 
 
-# здесь объявляйте класс модели нейронной сети
-class RNNNeuralNetwork(nn.Module):
+class RNeuralNetwork(nn.Module):
     def __init__(self, input_size, output_size, hidden_size = 32):
         super().__init__()
-        self.hidden_size = hidden_size
-        self.input_size = input_size
-        self.rnn = nn.RNN(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=1, nonlinearity='tanh', bias=False, batch_first=True)
-        self.layer = nn.Linear(self.hidden_size, self.input_size, bias=True)
-        
+        self.rnn = nn.RNN(input_size=input_size, hidden_size=hidden_size, num_layers=1, nonlinearity='tanh', bias=True, batch_first=True)
+        self.out = nn.Linear(hidden_size, output_size)
+
     def forward(self, x):
         _, h = self.rnn(x)
-        return self.layer(h)
+        y = self.out(h)
+        return y
 
 
 
-# сюда копируйте объекты d_train и train_data
 d_train = CharsDataset(10)
 train_data = data.DataLoader(d_train, batch_size = 8, shuffle=True, drop_last=False)
 
 
-model = RNNNeuralNetwork(input_size=d_train.num_characters, output_size=d_train.num_characters) # создайте объект модели
+model = RNeuralNetwork(d_train.num_characters, d_train.num_characters)
 
 
-optimizer = optim.Adam(params=model.parameters(), lr=0.01) # оптимизатор Adam с шагом обучения 0.01
-loss_func = nn.CrossEntropyLoss() # функция потерь - CrossEntropyLoss
+optimizer = optim.Adam(params=model.parameters(), lr=0.01) 
+loss_func = nn.CrossEntropyLoss()
 
 
-epochs = 1 # число эпох (это конечно, очень мало, в реальности нужно от 100 и более)
-model.train() # переведите модель в режим обучения
+epochs = 1
+model.train()
 
 
 for _e in range(epochs):
     for x_train, y_train in train_data:
-        predict = model(x_train).squeeze(0) # вычислите прогноз модели для x_train
-        loss = loss_func(predict, y_train) # вычислите потери для predict и y_train
+        predict = model(x_train).squeeze(0) 
+        loss = loss_func(predict, y_train)
 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
 
-model.eval() # переведите модель в режим эксплуатации
-predict = "нейронная сеть ".lower() # начальная фраза
-total = 20 # число прогнозируемых символов (дополнительно к начальной фразе)
+model.eval()
+predict = "нейронная сеть ".lower()
+total = 20
 
 
-# выполните прогноз следующих total символов print(d_train.alpha_to_int['н'])
 for _ in range(total):
-    line = predict[-10:]
-    data = []
-        targets = []
-        for line in self.lines:
-            line = line.lower()
-            for i in range(len(line) - self.prev_chars):
-                data.append([self.alpha_to_int[line[x]] for x in range(i, i+self.prev_chars)])
-                ch = line[i+self.prev_chars]
-                targets.append(self.alpha_to_int[ch])
-        
-        self.data = torch.tensor(data)
-        self.targets = torch.tensor(targets)
-    s = model(d)
-# выведите полученную строку на экран
+    _data = d_train.onehots[[d_train.alpha_to_int[predict[-x]] for x in range(d_train.prev_chars, 0, -1)]]
+    with torch.no_grad():
+        p = model(_data.unsqueeze(0)).squeeze(0)
+    indx = torch.argmax(p, dim=1)
+    predict += d_train.int_to_alpha[indx.item()]
+
+print(predict)
